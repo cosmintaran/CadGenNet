@@ -1,5 +1,5 @@
 ﻿
-namespace CadGenNet.Map
+namespace CadGenNet.MapNet
 {
     partial class MenuToolbarControl
     {
@@ -8,6 +8,7 @@ namespace CadGenNet.Map
         /// </summary>
         private System.ComponentModel.IContainer components = null;
         public event EventHandler OpenShapefileClicked;
+        public event EventHandler SaveClicked;
         public ComboBox LayerComboBox { get; private set; }
 
         /// <summary> 
@@ -38,7 +39,9 @@ namespace CadGenNet.Map
             var menuStrip1 = new MenuStrip();
             var fileMenuItem = new ToolStripMenuItem("File");
             var openMenuItem = new ToolStripMenuItem("Open Shapefile", null, OpenShapefileMenuItem_Click);
+            var saveMenuItem = new ToolStripMenuItem("Save", null, SaveProject);
             fileMenuItem.DropDownItems.Add(openMenuItem);
+            fileMenuItem.DropDownItems.Add(saveMenuItem);
             menuStrip1.Items.Add(fileMenuItem);
 
             // Create and configure ToolStrip
@@ -68,17 +71,6 @@ namespace CadGenNet.Map
 
             ResumeLayout(false);
         }
-
-        private void OpenShapefileMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenShapefileClicked?.Invoke(sender, e);
-        }
-
-        private void OpenShapefileToolStripButton_Click(object sender, EventArgs e)
-        {
-            OpenShapefileClicked?.Invoke(sender, e);
-        }
-
         #endregion
     }
 }

@@ -1,9 +1,7 @@
 ﻿using DotSpatial.Controls;
 using DotSpatial.Projections;
-using System.Resources;
-using System.Windows.Forms;
 
-namespace CadGenNet.Map
+namespace CadGenNet.MapNet
 {
     partial class WinMapControl
     {

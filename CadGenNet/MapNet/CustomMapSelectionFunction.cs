@@ -1,9 +1,6 @@
 ﻿using DotSpatial.Controls;
-using DotSpatial.Symbology;
-using System.Drawing;
-using System.Windows.Forms;
 
-namespace CadGenNet.Map
+namespace CadGenNet.MapNet
 {
     public class CustomMapFunction : MapFunction
     {

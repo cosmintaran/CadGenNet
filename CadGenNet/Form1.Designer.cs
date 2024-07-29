@@ -1,10 +1,10 @@
-﻿using CadGenNet.Map;
-using DotSpatial.Controls;
+﻿using DotSpatial.Controls;
 using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.Symbology;
 using NetTopologySuite.Geometries;
 using System.Windows.Forms;
+using CadGenNet.MapNet;
 
 namespace CadGenNet
 {
@@ -50,6 +50,7 @@ namespace CadGenNet
             };
 
             menuToolbarControl.OpenShapefileClicked += OpenShapefile;
+            menuToolbarControl.SaveClicked += MenuToolbarControl_SaveClicked;
 
             progressBar1 = new ProgressBar
             {
@@ -83,89 +84,13 @@ namespace CadGenNet
 
 
             mapControl.GetMap().KeyDown += new KeyEventHandler(Map_KeyDown);
-            mapControl.GetMap().MouseDown += new MouseEventHandler(Map_MouseDown);
+            mapControl.GetMap().MouseUp += new MouseEventHandler(Map_MouseUp);
             mapControl.GetMap().Focus();
 
             ResumeLayout(false);
             PerformLayout();
         }
 
-        private void MenuItem2_Click(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void MenuItem1_Click(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-
-        private void Map_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                var map = sender as DotSpatial.Controls.Map;
-                System.Drawing.Point loc = new(e.X + ((Legend)map.Legend).ControlRectangle.X, e.Location.Y + ((Legend)map.Legend).ControlRectangle.Top);
-                // Convert mouse coordinates to map coordinates
-                Coordinate coord = map.PixelToProj(loc);
-                var pp = map.ProjToPixel(coord);
-                // Define a small tolerance for the selection
-                double tolerance = 0.00001;
-
-                // Create an extent around the clicked point
-                var extent = new Extent(coord.X - tolerance, coord.Y - tolerance, coord.X + tolerance, coord.Y + tolerance);
-
-                // Clear previous selections
-                foreach (var layers in map.GetFeatureLayers())
-                {
-                    layers.ClearSelection();
-                }
-
-                // Select features within the extent
-                IMapFeatureLayer selectedLayer = null;
-                var layer = map.GetFeatureLayers().Where(s=>s.IsSelected == true && s.IsVisible == true).FirstOrDefault();
-
-                if (layer != null)
-                {
-                    var features = layer.DataSet.Select(extent).FirstOrDefault();
-                    if (features != null)
-                    {
-                        layer.Select(features);
-                        selectedLayer = layer;
-
-
-                        contextMenuStrip.Tag = selectedLayer;
-                        contextMenuStrip.Show(map, e.Location);
-                    }
-                }
-
-            }
-        }
-
-        private void OpenShapefile(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "Shapefiles (*.shp)|*.shp";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string filePath = openFileDialog.FileName;
-                    IFeatureSet featureSet = FeatureSet.Open(filePath);
-                    featureSet.Projection = KnownCoordinateSystems.Geographic.World.WGS1984;
-                    appManager1.Map.Layers.Add(featureSet);
-                }
-            }
-        }
-
-        private void Map_KeyDown(object sender, KeyEventArgs e)
-        {
-            foreach (var featureLayer in mapControl.GetMap().GetFeatureLayers().Where(s => s.Selection.Count > 0))
-            {
-
-                featureLayer.ClearSelection(out var envelope, true);
-            }
-        }
         #region Windows Form Designer generated code
 
         /// <summary>
